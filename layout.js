@@ -7,23 +7,15 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
-function navLink(href, label, key, active) {
-  const current = key === active ? ' class="active"' : "";
-  return `<a href="${href}"${current}>${label}</a>`;
-}
-
-function layout(title, content, user, active) {
-  const links = [
-    navLink("/", "Home", "home", active),
-    navLink("/about", "About", "about", active)
-  ];
-
-  if (user) {
-    links.push(navLink("/dashboard", "Dashboard", "dashboard", active));
-    links.push('<a href="/logout" class="nav-button">Logout</a>');
-  } else {
-    links.push('<a href="/login" class="nav-button">Login</a>');
-  }
+function layout(title, content, user) {
+  const links = user
+    ? `<a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/logout" class="nav-button">Logout</a>`
+    : `<a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/login" class="nav-button">Login</a>`;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -37,19 +29,21 @@ function layout(title, content, user, active) {
   <header class="site-header">
     <div class="container header-inner">
       <a href="/" class="brand">
-        <span class="brand-icon">&#128214;</span>
+        <span class="brand-mark">CCL</span>
         <span>Central City Library</span>
       </a>
-      <nav class="site-nav">
-        ${links.join("\n        ")}
+      <nav>
+        ${links}
       </nav>
     </div>
   </header>
-  ${content}
+  <main class="container">
+    ${content}
+  </main>
   <footer class="site-footer">
-    <div class="container">
+    <div class="container footer-inner">
       <p>Central City Library Membership Portal</p>
-      <p class="footer-note">Open Monday to Saturday, 9:00 AM to 7:00 PM</p>
+      <p>Open Monday to Saturday, 9:00 AM to 7:00 PM</p>
     </div>
   </footer>
 </body>
@@ -58,104 +52,95 @@ function layout(title, content, user, active) {
 
 function homePage(user) {
   const buttons = user
-    ? '<a class="button button-gold" href="/dashboard">Go to your dashboard</a>'
-    : `<a class="button button-gold" href="/login">Member login</a>
-        <a class="button button-outline" href="/about">Learn more</a>`;
+    ? `<a class="button" href="/dashboard">Go to dashboard</a>
+        <a class="button outline" href="/about">About the library</a>`
+    : `<a class="button" href="/login">Member login</a>
+        <a class="button outline" href="/about">About the library</a>`;
 
   const content = `
-  <section class="hero">
-    <div class="container">
+    <section class="hero">
       <p class="eyebrow">Membership portal</p>
-      <h1>Your library, always open</h1>
-      <p class="lead">Log in to see your borrowed books, due dates and member services, anytime and from any device.</p>
+      <h1>Your library, open anytime</h1>
+      <p class="lead">Log in to see your borrowed books, due dates and member details in one place.</p>
       <div class="hero-actions">
         ${buttons}
       </div>
-    </div>
-  </section>
-  <main class="container">
-    <h2 class="section-title">What you can do</h2>
-    <div class="feature-grid">
+    </section>
+    <section class="feature-grid">
       <article class="feature">
-        <span class="feature-icon">&#128218;</span>
-        <h3>Borrow books</h3>
-        <p>Track every book you have borrowed and never miss a due date.</p>
+        <h3>Borrow and track</h3>
+        <p>Keep an eye on every book you have and when it is due back.</p>
       </article>
       <article class="feature">
-        <span class="feature-icon">&#128187;</span>
-        <h3>Digital resources</h3>
-        <p>Access journals, e-books and research material from anywhere.</p>
+        <h3>Secure access</h3>
+        <p>Your account is protected by a login session that ends when you log out.</p>
       </article>
       <article class="feature">
-        <span class="feature-icon">&#129681;</span>
-        <h3>Study spaces</h3>
-        <p>Quiet reading halls and group rooms are open to all members.</p>
+        <h3>For students and staff</h3>
+        <p>One portal for every registered member of the college community.</p>
       </article>
-    </div>
-  </main>`;
+    </section>`;
 
-  return layout("Home", content, user, "home");
+  return layout("Home", content, user);
 }
 
 function aboutPage(user) {
   const content = `
-  <section class="page-banner">
-    <div class="container">
+    <section class="page-title">
       <h1>About the library</h1>
-      <p class="lead">Serving students and staff with knowledge since 1985.</p>
-    </div>
-  </section>
-  <main class="container">
-    <div class="two-column">
-      <section class="panel">
-        <h2>Our collection</h2>
-        <p>Central City Library holds more than 50,000 books, journals and digital resources across every department.</p>
-        <p>Members can borrow up to five books at a time, and loans can be tracked online from the dashboard.</p>
-      </section>
-      <section class="panel">
-        <h2>Opening hours</h2>
-        <ul class="info-list">
-          <li><span>Monday to Friday</span><strong>9:00 AM - 7:00 PM</strong></li>
-          <li><span>Saturday</span><strong>9:00 AM - 5:00 PM</strong></li>
-          <li><span>Sunday</span><strong>Closed</strong></li>
-        </ul>
-      </section>
-    </div>
-  </main>`;
+      <p class="lead">Serving students and staff with books, journals and digital resources.</p>
+    </section>
+    <section class="stat-grid">
+      <div class="stat">
+        <span class="stat-number">50,000+</span>
+        <span class="stat-label">Books and journals</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">6 days</span>
+        <span class="stat-label">Open every week</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">9 AM - 7 PM</span>
+        <span class="stat-label">Opening hours</span>
+      </div>
+    </section>
+    <section class="card">
+      <h2>Our mission</h2>
+      <p>We make reading, research and study easy for every member, with friendly staff and a quiet space to learn.</p>
+    </section>`;
 
-  return layout("About", content, user, "about");
+  return layout("About", content, user);
 }
 
 function loginPage(message, error, username) {
-  const notice = message ? `<p class="alert alert-info">${escapeHtml(message)}</p>` : "";
-  const failure = error ? `<p class="alert alert-error">${escapeHtml(error)}</p>` : "";
+  const notice = message ? `<p class="notice">${escapeHtml(message)}</p>` : "";
+  const failure = error ? `<p class="error">${escapeHtml(error)}</p>` : "";
 
   const content = `
-  <main class="auth-page">
-    <section class="auth-card">
-      <div class="auth-icon">&#128273;</div>
-      <h1>Member login</h1>
-      <p class="muted">Sign in to view your library account.</p>
-      ${notice}
-      ${failure}
-      <form method="post" action="/login">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" value="${escapeHtml(username || "")}" required autofocus>
+    <section class="login-wrap">
+      <div class="login-card">
+        <h1>Member login</h1>
+        <p class="muted">Sign in to open your dashboard.</p>
+        ${notice}
+        ${failure}
+        <form method="post" action="/login">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" value="${escapeHtml(username || "")}" required autofocus>
 
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required>
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required>
 
-        <button type="submit" class="button button-primary button-full">Log in</button>
-      </form>
-      <div class="demo-box">
-        <strong>Demo accounts</strong>
-        <p>student / library123</p>
-        <p>staff / staff456</p>
+          <button type="submit" class="full">Log in</button>
+        </form>
+        <div class="demo-box">
+          <strong>Demo account</strong>
+          <span>Username: student</span>
+          <span>Password: library123</span>
+        </div>
       </div>
-    </section>
-  </main>`;
+    </section>`;
 
-  return layout("Login", content, null, "login");
+  return layout("Login", content, null);
 }
 
 function dashboardPage(user, books, visits, loginTime) {
@@ -165,23 +150,20 @@ function dashboardPage(user, books, visits, loginTime) {
           <tr>
             <td>${escapeHtml(book.title)}</td>
             <td>${escapeHtml(book.due)}</td>
-            <td><span class="badge">On loan</span></td>
           </tr>`;
     })
     .join("");
 
   const content = `
-  <section class="page-banner">
-    <div class="container banner-row">
-      <div>
-        <h1>Welcome, ${escapeHtml(user.name)}</h1>
-        <p class="lead">Here is a summary of your library account.</p>
+    <section class="page-title">
+      <h1>Welcome, ${escapeHtml(user.name)}</h1>
+      <p class="lead">Here is a summary of your membership.</p>
+    </section>
+    <section class="stat-grid">
+      <div class="stat">
+        <span class="stat-number">${escapeHtml(user.username)}</span>
+        <span class="stat-label">Logged in as</span>
       </div>
-      <span class="role-badge">${escapeHtml(user.role)}</span>
-    </div>
-  </section>
-  <main class="container">
-    <div class="stat-grid">
       <div class="stat">
         <span class="stat-number">${books.length}</span>
         <span class="stat-label">Books borrowed</span>
@@ -190,12 +172,8 @@ function dashboardPage(user, books, visits, loginTime) {
         <span class="stat-number">${visits}</span>
         <span class="stat-label">Dashboard visits this session</span>
       </div>
-      <div class="stat">
-        <span class="stat-text">${escapeHtml(loginTime)}</span>
-        <span class="stat-label">Logged in at</span>
-      </div>
-    </div>
-    <section class="panel">
+    </section>
+    <section class="card">
       <h2>Your borrowed books</h2>
       <div class="table-wrap">
         <table>
@@ -203,31 +181,30 @@ function dashboardPage(user, books, visits, loginTime) {
             <tr>
               <th>Title</th>
               <th>Due date</th>
-              <th>Status</th>
             </tr>
           </thead>
           <tbody>${rows}
           </tbody>
         </table>
       </div>
-    </section>
-  </main>`;
+      <p class="muted small">Logged in at ${escapeHtml(loginTime)}</p>
+    </section>`;
 
-  return layout("Dashboard", content, user, "dashboard");
+  return layout("Dashboard", content, user);
 }
 
 function notFoundPage(user) {
   const content = `
-  <main class="auth-page">
-    <section class="auth-card">
-      <div class="auth-icon">&#128269;</div>
+    <section class="hero">
+      <p class="eyebrow">Error 404</p>
       <h1>Page not found</h1>
-      <p class="muted">The page you requested does not exist.</p>
-      <a class="button button-primary" href="/">Back to home</a>
-    </section>
-  </main>`;
+      <p class="lead">The page you requested does not exist.</p>
+      <div class="hero-actions">
+        <a class="button" href="/">Back to home</a>
+      </div>
+    </section>`;
 
-  return layout("Page not found", content, user, "");
+  return layout("Page not found", content, user);
 }
 
 module.exports = {

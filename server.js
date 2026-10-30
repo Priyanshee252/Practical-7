@@ -1,7 +1,7 @@
 const path = require("path");
 const express = require("express");
 const session = require("express-session");
-const users = require("./users");
+const account = require("./users");
 const pages = require("./layout");
 
 const app = express();
@@ -61,11 +61,9 @@ app.post("/login", function (req, res) {
   const username = String(req.body.username || "").trim();
   const password = String(req.body.password || "");
 
-  const match = users.find(function (account) {
-    return account.username === username && account.password === password;
-  });
+  const isValid = username === account.username && password === account.password;
 
-  if (!match) {
+  if (!isValid) {
     res.status(401).send(pages.loginPage("", "Invalid username or password.", username));
     return;
   }
@@ -76,10 +74,9 @@ app.post("/login", function (req, res) {
       return;
     }
     req.session.user = {
-      username: match.username,
-      name: match.name,
-      role: match.role,
-      books: match.books
+      username: account.username,
+      name: account.name,
+      books: account.books
     };
     req.session.loginTime = new Date().toLocaleString("en-IN");
     req.session.visits = 0;
