@@ -1,7 +1,7 @@
 const account = {
   username: "student",
   password: "library123",
-  name: "Riya Patel",
+  name: "Priyanshee Vasani",
   books: [
     { title: "Introduction to Algorithms", due: "12 Nov 2026" },
     { title: "Eloquent JavaScript", due: "15 Nov 2026" },
