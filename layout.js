@@ -160,11 +160,6 @@ function loginPage(message, error, username) {
 
         <button type="submit" class="button full">Log in</button>
       </form>
-      <div class="demo-box">
-        <strong>Demo account</strong>
-        <span>Username: student</span>
-        <span>Password: library123</span>
-      </div>
     </section>`;
 
   return layout("Login", content, null);
